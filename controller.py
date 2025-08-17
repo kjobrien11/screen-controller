@@ -76,7 +76,7 @@ def show_roulette():
 @app.get("/show/otters")
 def show_otters():
     logger.info("Otters endpoint hit")
-    launch_chromium("https://www.youtube.com/watch?v=9mg9PoFEX2U&autoplay=1&mute=1", youtube=True)
+    launch_chromium("https://www.youtube.com/embed/9mg9PoFEX2U?autoplay=1&mute=1&controls=0", youtube=True)
     return {"status": "Switched to Otter Cam"}
 
 
