@@ -67,7 +67,7 @@ def show_roulette():
         "xdotool",
         "search", "--onlyvisible", "--class", "chromium",
         "windowactivate", "--sync",
-        "key", "Ctrl+L", "type", "https://www.youtube.com/watch?v=9mg9PoFEX2U", "key", "Return"
+        "key", "Ctrl+L", "type", "https://www.youtube.com/watch?v=9mg9PoFEX2U&autoplay=1", "key", "Return"
     ])
     return {"status": "Switched to Roulette Wheel"}
 
