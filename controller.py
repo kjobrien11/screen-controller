@@ -34,6 +34,9 @@ def control_page():
         <button onclick="fetch('/show/mlb')">MLB Live Stats</button>
         <button onclick="fetch('/show/roulette')">Roulette Wheel</button>
         <button onclick="fetch('/show/otters')">Otter Cam</button>
+        <button onclick="fetch('/show/alaska')">Alaska Cam</button>
+        <button onclick="fetch('/show/panda')">Panda Cam</button>
+        <button onclick="fetch('/show/eagle')">Eagles Cam</button>
     </body>
 </html>
 """
@@ -53,10 +56,8 @@ def launch_chromium(url: str, youtube=False):
         "--no-first-run",
         url
     ]
-
-    # Optionally add --app mode for YouTube to remove UI
     if youtube:
-        args.insert(1, "--app=" + url)  # opens as app window
+        args.insert(1, "--app=" + url)
 
     subprocess.Popen(args)
 
@@ -77,6 +78,24 @@ def show_roulette():
 def show_otters():
     logger.info("Otters endpoint hit")
     launch_chromium("https://www.youtube.com/embed/9mg9PoFEX2U?autoplay=1&mute=1&controls=0", youtube=True)
+    return {"status": "Switched to Otter Cam"}
+
+@app.get("/show/alaska")
+def show_alaska():
+    logger.info("Alaska endpoint hit")
+    launch_chromium("https://www.youtube.com/embed/73-EekdVVU8?autoplay=1&mute=1&controls=0", youtube=True)
+    return {"status": "Switched to Otter Cam"}
+
+@app.get("/show/panda")
+def show_pandas():
+    logger.info("Panda endpoint hit")
+    launch_chromium("https://www.youtube.com/embed/3szkFHfr6sA?autoplay=1&mute=1&controls=0", youtube=True)
+    return {"status": "Switched to Otter Cam"}
+
+@app.get("/show/eagle")
+def show_eagles():
+    logger.info("Eagle endpoint hit")
+    launch_chromium("https://www.youtube.com/embed/B4-L2nfGcuE?autoplay=1&mute=1&controls=0", youtube=True)
     return {"status": "Switched to Otter Cam"}
 
 
