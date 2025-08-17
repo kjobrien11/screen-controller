@@ -38,16 +38,28 @@ def control_page():
 </html>
 """
 
-def launch_chromium(url: str):
-    # Kill any existing Chromium instances
+def launch_chromium(url: str, youtube=False):
+    # Kill existing Chromium
     subprocess.run(["pkill", "-f", "chromium"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    
-    # Launch Chromium in kiosk mode
-    subprocess.Popen([
+
+    args = [
         "chromium-browser",
         "--kiosk",
+        "--hide-scrollbars",
+        "--disable-overscroll-history-navigation",
+        "--autoplay-policy=no-user-gesture-required",
+        "--disable-infobars",
+        "--disable-session-crashed-bubble",
+        "--no-first-run",
         url
-    ])
+    ]
+
+    # Optionally add --app mode for YouTube to remove UI
+    if youtube:
+        args.insert(1, "--app=" + url)  # opens as app window
+
+    subprocess.Popen(args)
+
 
 @app.get("/show/mlb")
 def show_mlb():
@@ -64,7 +76,7 @@ def show_roulette():
 @app.get("/show/otters")
 def show_otters():
     logger.info("Otters endpoint hit")
-    launch_chromium("https://www.youtube.com/watch?v=9mg9PoFEX2U&autoplay=1&mute=1")
+    launch_chromium("https://www.youtube.com/watch?v=9mg9PoFEX2U&autoplay=1&mute=1", youtube=True)
     return {"status": "Switched to Otter Cam"}
 
 
