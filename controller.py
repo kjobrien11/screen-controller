@@ -68,6 +68,10 @@ def click_position(x: int, y: int):
         "mousemove", str(x), str(y),
         "click", "1"
     ])
+    subprocess.run([
+        "xdotool",
+        "mousemove", str(1919), str(1079),
+    ])
 
 @app.get("/show/mlb")
 def show_mlb():
