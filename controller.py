@@ -61,12 +61,24 @@ def launch_chromium(url: str, youtube=False):
 
     subprocess.Popen(args)
 
+def click_position(x: int, y: int):
+    # Moves mouse and clicks
+    subprocess.run([
+        "xdotool",
+        "mousemove", str(x), str(y),
+        "click", "1"
+    ])
 
 @app.get("/show/mlb")
 def show_mlb():
     logger.info("MLB endpoint hit")
     launch_chromium("http://localhost:4200")
-    return {"status": "Switched to MLB Live Stats"}
+    import time
+    time.sleep(10)
+
+    click_position(57, 1037)
+
+    return {"status": "Switched to MLB Live Stats and clicked button"}
 
 @app.get("/show/roulette")
 def show_roulette():
