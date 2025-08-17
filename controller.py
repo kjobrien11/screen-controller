@@ -5,6 +5,8 @@ import logging
 
 app = FastAPI()
 
+logger = logging.getLogger("uvicorn")
+
 # HTML control page
 @app.get("/", response_class=HTMLResponse)
 def control_page():
@@ -36,44 +38,35 @@ def control_page():
 </html>
 """
 
+def launch_chromium(url: str):
+    # Kill any existing Chromium instances
+    subprocess.run(["pkill", "-f", "chromium"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    
+    # Launch Chromium in kiosk mode
+    subprocess.Popen([
+        "chromium-browser",
+        "--kiosk",
+        url
+    ])
+
 @app.get("/show/mlb")
 def show_mlb():
     logger.info("MLB endpoint hit")
-    subprocess.run([
-        "xdotool",
-        "search", "--onlyvisible", "--class", "chromium",
-        "windowactivate", "--sync",
-        "key", "Ctrl+L", "type", "http://localhost:4200", "key", "Return"
-    ])
+    launch_chromium("http://localhost:4200")
     return {"status": "Switched to MLB Live Stats"}
+
+@app.get("/show/roulette")
+def show_roulette():
+    logger.info("Roulette endpoint hit")
+    launch_chromium("http://localhost:4201")
+    return {"status": "Switched to Roulette Wheel"}
 
 @app.get("/show/otters")
 def show_otters():
     logger.info("Otters endpoint hit")
-    subprocess.run([
-        "xdotool",
-        "search", "--onlyvisible", "--class", "chromium",
-        "windowactivate", "--sync",
-        "key", "Ctrl+L",
-        "type", "https://www.youtube.com/watch?v=9mg9PoFEX2U",
-        "key", "Return"
-    ])
+    launch_chromium("https://www.youtube.com/watch?v=9mg9PoFEX2U&autoplay=1&mute=1")
     return {"status": "Switched to Otter Cam"}
 
-@app.get("/show/otters")
-def show_roulette():
-    logger.info("otters endpoint hit")
-    subprocess.run([
-        "xdotool",
-        "search", "--onlyvisible", "--class", "chromium",
-        "windowactivate", "--sync",
-        "key", "Ctrl+L", "type", "https://www.youtube.com/watch?v=9mg9PoFEX2U&autoplay=1", "key", "Return"
-    ])
-    return {"status": "Switched to Roulette Wheel"}
-
-
-import logging
-logger = logging.getLogger("uvicorn")
 
 if __name__ == "__main__":
     import uvicorn
