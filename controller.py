@@ -27,6 +27,19 @@ def control_page():
                 padding: 10rem;
                 font-size: 5rem;
             }
+            .youtube-submit{
+                display: flex;
+                width: 100%;
+            }
+
+            .inp{
+                flex: 2;
+            }
+
+            .play{
+             flex: 1;
+            }
+
         </style>
     </head>
     <body>
@@ -36,8 +49,10 @@ def control_page():
         <button onclick="fetch('/show/alaska')">Alaska Cam</button>
         <button onclick="fetch('/show/panda')">Panda Cam</button>
         <button onclick="fetch('/show/eagle')">Eagle Cam</button>
-        <input id="youtubeUrl" placeholder="Youtube URL">
-        <button onclick="playYoutube()">Play YouTube</button>
+        <div class = "youtube-submit">
+            <input class = "inp" id="youtubeUrl" placeholder="Youtube URL">
+            <button class = "play" onclick="playYoutube()">Play</button>
+        </div>
 
         <script>
             function playYoutube() {
