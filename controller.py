@@ -7,7 +7,6 @@ app = FastAPI()
 
 logger = logging.getLogger("uvicorn")
 
-# HTML control page
 @app.get("/", response_class=HTMLResponse)
 def control_page():
     return """
@@ -22,7 +21,7 @@ def control_page():
                 justify-content: center;
                 height: 100vh;
             }
-            button {
+            button, input {
                 width: 100%;
                 height: 10vh;
                 padding: 10rem;
@@ -36,13 +35,23 @@ def control_page():
         <button onclick="fetch('/show/otters')">Otter Cam</button>
         <button onclick="fetch('/show/alaska')">Alaska Cam</button>
         <button onclick="fetch('/show/panda')">Panda Cam</button>
-        <button onclick="fetch('/show/eagle')">Eagles Cam</button>
+        <button onclick="fetch('/show/eagle')">Eagle Cam</button>
+        <input id="youtubeUrl" placeholder="Youtube URL">
+        <button onclick="playYoutube()">Play YouTube</button>
+
+        <script>
+            function playYoutube() {
+                const url = document.getElementById("youtubeUrl").value;
+                if (url) {
+                    fetch('/show/youtube?url=' + encodeURIComponent(url));
+                }
+            }
+        </script>
     </body>
 </html>
 """
 
 def launch_chromium(url: str, youtube=False):
-    # Kill existing Chromium
     subprocess.run(["pkill", "-f", "chromium"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     args = [
@@ -62,7 +71,6 @@ def launch_chromium(url: str, youtube=False):
     subprocess.Popen(args)
 
 def click_position(x: int, y: int):
-    # Moves mouse and clicks
     subprocess.run([
         "xdotool",
         "mousemove", str(x), str(y),
@@ -113,6 +121,14 @@ def show_eagles():
     logger.info("Eagle endpoint hit")
     launch_chromium("https://www.youtube.com/embed/B4-L2nfGcuE?autoplay=1&mute=1&controls=0", youtube=True)
     return {"status": "Switched to Otter Cam"}
+
+@app.get("/show/youtube")
+def show_youtube(url: str):
+    logger.info(f"YouTube endpoint hit with URL: {url}")
+    video_id = url[-11:]
+    embed_url = f"https://www.youtube.com/embed/{video_id}?autoplay=1&mute=1&controls=0"
+    launch_chromium(embed_url, youtube=True)
+    return {"status": f"Switched to YouTube video {video_id}"}
 
 
 if __name__ == "__main__":
