@@ -9,6 +9,9 @@ logger = logging.getLogger("uvicorn")
 
 @app.get("/", response_class=HTMLResponse)
 def control_page():
+
+        #   <button onclick="fetch('/show/panda')">Panda Cam</button>
+        # <button onclick="fetch('/show/eagle')">Eagle Cam</button>
     return """
 <html>
     <head>
@@ -44,11 +47,12 @@ def control_page():
     </head>
     <body>
         <button onclick="fetch('/show/mlb')">MLB Live Stats</button>
+        <button onclick="fetch('/show/nba')">NBA Live Stats</button>
         <button onclick="fetch('/show/roulette')">Roulette Wheel</button>
+        <button onclick="fetch('/show/dra7')">Dont Roll 7</button>
         <button onclick="fetch('/show/otters')">Otter Cam</button>
         <button onclick="fetch('/show/alaska')">Alaska Cam</button>
-        <button onclick="fetch('/show/panda')">Panda Cam</button>
-        <button onclick="fetch('/show/eagle')">Eagle Cam</button>
+  
         <div class = "youtube-submit">
             <input class = "inp" id="youtubeUrl" placeholder="Youtube URL">
             <button class = "play" onclick="playYoutube()">Play</button>
@@ -107,11 +111,24 @@ def show_mlb():
 
     return {"status": "Switched to MLB Live Stats and clicked button"}
 
+
+@app.get("/show/nba")
+def show_nba():
+    logger.info("NBA endpoint hit")
+    launch_chromium("http://localhost:4203")
+    return {"status": "Switched to NBA Live Stats"}
+
 @app.get("/show/roulette")
 def show_roulette():
     logger.info("Roulette endpoint hit")
     launch_chromium("http://localhost:4201")
     return {"status": "Switched to Roulette Wheel"}
+    
+@app.get("/show/dra7")
+def show_roulette():
+    logger.info("Roulette endpoint hit")
+    launch_chromium("http://localhost:4202")
+    return {"status": "Switched to Dont Roll 7"}    
 
 @app.get("/show/otters")
 def show_otters():
